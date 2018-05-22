@@ -1,0 +1,22 @@
+/*
+ * Toolbar button that allows the user to save his SQL snippet.
+ */
+button
+  innerValue:@"<span class=""icon-floppy-disk""></span>"
+  title:Saves your SQL snippet
+  onclick
+
+    /*
+     * Verifying user actually have any content in his CodeMirror instance.
+     */
+    hyper-sql.codemirror.get-sql
+    if:x:/@hyper-sql.codemirror.get-sql?value
+      =:
+      micro.windows.info:Nothing to save
+        class:micro-windows-info warning
+      return
+
+    /*
+     * Invoking file that allows the user to load a stored snippet.
+     */
+    micro.evaluate.file:@HYPER-SQL/helpers/save-snippet.hl

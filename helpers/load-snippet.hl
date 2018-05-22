@@ -1,0 +1,88 @@
+
+/*
+ * File responsible for displaying user's stored snippets,
+ * allowing him to load it into his CodeMirror instance.
+ */
+create-widgets
+  micro.widgets.modal:hyper-sql-load-snippet
+    widgets
+      h3
+        innerValue:Load SQL snippet
+
+      /*
+       * Grid containing available snippets.
+       */
+      micro.widgets.grid:hyper-sql-load-snippet-grid
+        class:hover grid
+        columns
+          Name
+        oninit
+
+          /*
+           * Invoking event responsible for databinding datagrid.
+           */
+          hyper-sql.snippets.databind
+
+        events
+
+
+          /*
+           * Invoked when datagrid needs to be databound for some reasons.
+           */
+          hyper-sql.snippets.databind
+
+            /*
+             * Verifying that SQL snippets folder actually exists.
+             */
+            if
+              fetch:x:/0/0?value
+                folder-exists:~/documents/private/hyper-sql/
+
+              /*
+               * SQL snippets folder exists, listing all ".sql" files in it,
+               * andpopulating our datagrid.
+               */
+              list-files:~/documents/private/hyper-sql/
+                filter:.sql
+              for-each:x:/@list-files/*?name
+                split:x:/@_dp?value
+                  =:/
+                eval-x:x:/+/*/*/*/Name|/+/**/.name
+                add:x:/..if/*/micro.widgets.grid.databind
+                  src
+                    item
+                      .row
+                        style:"cursor:pointer;"
+                        onclick
+
+                          /*
+                           * Loading snippet, and closing modal widget.
+                           */
+                          .name:x:/@split/0/-?name
+                          load-file:~/documents/private/hyper-sql/{0}
+                            :x:/@.name?value
+                          hyper-sql.codemirror.populate-with-sql:x:/@load-file/*?value
+                          delete-widget:hyper-sql-load-snippet
+
+                      Name:x:/@split/0/-?name
+
+              /*
+               * Databinding our datagrid.
+               */
+              micro.widgets.grid.databind:x:/../*/_event?value
+                items
+
+      /*
+       * Wrapper around Load/Close buttons.
+       */
+      div
+        class:right
+        widgets
+          button
+            innerValue:Close
+            onclick
+
+              /*
+               * Simply deletes modal widget.
+               */
+              delete-widget:hyper-sql-load-snippet

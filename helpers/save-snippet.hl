@@ -1,0 +1,144 @@
+
+/*
+ * File responsible for allowing user to save his snippet.
+ */
+create-widgets
+  micro.widgets.modal:hyper-sql-save-snippet
+    widgets
+      h3
+        innerValue:Save SQL snippet
+
+      /*
+       * Grid containing available snippets.
+       */
+      micro.widgets.grid:hyper-sql-save-snippet-grid
+        class:hover grid
+        columns
+          Name
+        oninit
+
+          /*
+           * Invoking event responsible for databinding datagrid.
+           */
+          hyper-sql.snippets.databind
+
+        events
+
+
+          /*
+           * Invoked when datagrid needs to be databound for some reasons.
+           */
+          hyper-sql.snippets.databind
+
+            /*
+             * Verifying that SQL snippets folder actually exists.
+             */
+            if
+              fetch:x:/0/0?value
+                folder-exists:~/documents/private/hyper-sql/
+
+              /*
+               * SQL snippets folder exists, listing all ".sql" files in it,
+               * andpopulating our datagrid.
+               */
+              list-files:~/documents/private/hyper-sql/
+                filter:.sql
+              for-each:x:/@list-files/*?name
+                split:x:/@_dp?value
+                  =:/
+                eval-x:x:/+/*/*/*/Name|/+/**/.name
+                add:x:/..if/*/micro.widgets.grid.databind
+                  src
+                    item
+                      .row
+                        style:"cursor:pointer;"
+                        onclick
+
+                          /*
+                           * Setting textbox value to value name of file.
+                           */
+                          .name:x:/@split/0/-?name
+                          set-widget-property:hyper-sql-save-snippet-name
+                            value:x:/@.name?value
+                          micro.page.set-focus:hyper-sql-save-snippet-name
+
+                      Name:x:/@split/0/-?name
+
+              /*
+               * Databinding our datagrid.
+               */
+              micro.widgets.grid.databind:x:/../*/_event?value
+                items
+
+      /*
+       * Wrapper around Save/Close buttons.
+       */
+      div
+        class:right strip fill
+        widgets
+          input:hyper-sql-save-snippet-name
+            type:text
+            placeholder:Name of your snippet ...
+            onkeydown:@"if (event.keyCode == 13) {p5.$('hyper-sql-save-snippet-button').raise('onclick');return false;} else if (event.keyCode == 27) {p5.$('hyper-sql-close-snippet-button').raise('onclick');return false;}"
+            oninit
+
+              /*
+               * Setting initial focus to "name" textbox.
+               */
+              micro.page.set-focus:hyper-sql-save-snippet-name
+
+          button:hyper-sql-save-snippet-button
+            innerValue:Save
+            onclick
+
+              /*
+               * Verifying SQL snippet folder exists.
+               */
+              if
+                fetch:x:/0/0?value
+                  folder-exists:~/documents/private/hyper-sql/
+                not
+
+                /*
+                 * Creating snippets folder.
+                 */
+                create-folder:~/documents/private/hyper-sql/
+
+              /*
+               * Retrieving name supplied by caller, and verify it ends with ".sql".
+               */
+              get-widget-property:hyper-sql-save-snippet-name
+                value
+              if
+                ends-with:x:/@get-widget-property/*/*?value
+                  src:.sql
+                not
+
+                /*
+                 * Appending ".sql" to snippet name.
+                 */
+                set:x:/@get-widget-property/*/*?value
+                  src:{0}.sql
+                    :x:/@get-widget-property/*/*?value
+
+              /*
+               * Retrieving code, and saving our file containing our snippet.
+               */
+              hyper-sql.codemirror.get-sql
+              save-file:~/documents/private/hyper-sql/{0}
+                :x:/@get-widget-property/*/*?value
+                src:x:/@hyper-sql.codemirror.get-sql?value
+
+              /*
+               * Deletes modal widget.
+               */
+              delete-widget:hyper-sql-save-snippet
+
+          button:hyper-sql-close-snippet-button
+            innerValue:Close
+            onclick
+
+              /*
+               * Simply deletes modal widget.
+               */
+              delete-widget:hyper-sql-save-snippet

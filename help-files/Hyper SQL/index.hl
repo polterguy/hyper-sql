@@ -1,0 +1,30 @@
+/*
+ * This is our main _"landing page"_ for our Hyper SQL help files.
+ */
+h2
+  innerValue:Hyper SQL
+
+micro.widgets.file
+  style:"float:right; margin-left: 1rem; margin-bottom: 1rem;"
+  files
+    /modules/hyper-sql/desktop.hl
+      href:/hyper-sql/
+
+p
+  innerValue:@"Hyper SQL is an administrative dashboard for MySQL, allowing you to administrate
+your MySQL databases. It allows you to execute arbitrary SQL towards your MySQL instance, and
+its databases - In addition to some graphical helper functionality, allowing you to more easily
+maintain your MySQL instance."
+
+/*
+ * All files at "root" of Hyper Core's help folder.
+ */
+desktop.help.widgets.help-index
+  folder:@HYPER-SQL/help-files/Hyper SQL/
+
+
+/*
+ * Meta information for all files in module.
+ */
+desktop.help.widgets.file-meta
+  folder:@HYPER-SQL/

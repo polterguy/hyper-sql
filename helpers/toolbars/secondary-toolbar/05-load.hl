@@ -1,0 +1,13 @@
+
+/*
+ * Toolbar button that allows the user to load a stored snippet.
+ */
+button
+  innerValue:@"<span class=""icon-folder-open""></span>"
+  title:Loads a stored SQL snippet
+  onclick
+
+    /*
+     * Invoking file that allows the user to load a stored snippet.
+     */
+    micro.evaluate.file:@HYPER-SQL/helpers/load-snippet.hl

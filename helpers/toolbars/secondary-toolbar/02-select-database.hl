@@ -54,10 +54,6 @@ container
        * Clearing old option values, and creating our "default select database" option.
        */
       clear-widget:x:/../*/_event?value
-      create-widget
-        parent:x:/../*/_event?value
-        element:option
-        innerValue:Select database ...
 
       /*
        * Figuring out all databases, and creating one option element for each.
@@ -69,3 +65,9 @@ container
             parent:x:/../*/_event?value
             element:option
             innerValue:x:/@_dp/#/*?value
+
+      /*
+       * Making sure "sys" is selected by default.
+       */
+      set-widget-property:x:/../*/_event?value
+        value:sys

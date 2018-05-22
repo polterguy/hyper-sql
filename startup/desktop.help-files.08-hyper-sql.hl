@@ -1,0 +1,11 @@
+/*
+ * Creates the __[desktop.help-files.08-hyper-sql]__ Active Event.
+ */
+
+/*
+ * This event serves as a _"sink"_ event for the help system, returning the
+ * root folder path to all help files related to Hyper SQL.
+ */
+create-event:desktop.help-files.08-hyper-sql
+
+  return:@HYPER-SQL/help-files/Hyper SQL/

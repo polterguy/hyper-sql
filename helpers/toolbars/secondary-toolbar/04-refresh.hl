@@ -1,4 +1,3 @@
-
 /*
  * Toolbar button that allows the user to refresh the server explorer.
  */
@@ -23,7 +22,7 @@ button
   onclick
 
     /*
-     * Incoking event that refreshes currently selected treeview item
+     * Invoking event that refreshes currently selected treeview item
      */
     micro.widgets.tree.get-selected-items:hyper-sql-explorer
     add:x:/+

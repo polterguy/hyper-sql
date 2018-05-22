@@ -43,6 +43,13 @@ create-event:hyper-sql.widgets.sql
 
 
         /*
+         * Help context Active Event.
+         */
+        desktop.help.get-context
+          return:@HYPER-SQL/help-files/Hyper SQL/index.hl
+
+
+        /*
          * Returns true if Hyper SQL is open.
          */
         hyper-sql.is-open
