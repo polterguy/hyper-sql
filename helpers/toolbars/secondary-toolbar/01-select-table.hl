@@ -1,10 +1,10 @@
-
 /*
  * Creates our "shortcut" button, that populates the CodeMirror editor
  * with "select * from database.table" and executes it.
  */
 button
   innerValue:@"<span class=""icon-eye""></span>"
+  title:Views the records in your currently selected table
   disabled
   events
 

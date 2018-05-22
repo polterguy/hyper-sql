@@ -1,0 +1,31 @@
+
+/*
+ * Toolbar button that allows the user to refresh the server explorer.
+ */
+button
+  innerValue:@"<span class=""icon-spinner11""></span>"
+  title:Refresh your currently activated node in your server explorer
+  disabled
+  events
+
+
+    /*
+     * Invoked when for some reasons the active database is changed.
+     */
+    hyper-sql.object-explorer.selected-item-changed
+
+      /*
+       * Since de-selection is impossible, we simply enable button period.
+       */
+      delete-widget-property:x:/../*/_event?value
+        disabled
+
+  onclick
+
+    /*
+     * Incoking event that refreshes currently selected treeview item
+     */
+    micro.widgets.tree.get-selected-items:hyper-sql-explorer
+    add:x:/+
+      src:x:/@micro.widgets.tree.get-selected-items/*
+    micro.widgets.tree.refresh-items:hyper-sql-explorer

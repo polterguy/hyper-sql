@@ -65,6 +65,7 @@ create-event:hyper-sql.widgets.sql
               class:col-100
               widgets
 
+
                 /*
                  * Our primary toolbar.
                  *
@@ -75,6 +76,7 @@ create-event:hyper-sql.widgets.sql
                   class:strip right hyper-ide-toolbar
                   folder:@HYPER-SQL/helpers/toolbars/primary-toolbar/
 
+
                 /*
                  * Our secondary toolbar.
                  *
@@ -84,6 +86,7 @@ create-event:hyper-sql.widgets.sql
                 micro.widgets.file:hyper-ide-toolbars
                   class:strip right hyper-ide-toolbar
                   folder:@HYPER-SQL/helpers/toolbars/secondary-toolbar/
+
 
         /*
          * Wrapper for actual content of Hyper SQL.
@@ -98,12 +101,18 @@ create-event:hyper-sql.widgets.sql
                   class:shaded rounded air-inner
                   widgets
 
+
                     /*
                      * Database object explorer.
                      */
                     micro.widgets.tree:hyper-sql-explorer
                       items
                         root:.
+
+
+                      /*
+                       * Invoked when some item in our treeview is expanded.
+                       */
                       .onexpand
 
                         /*
@@ -116,6 +125,11 @@ create-event:hyper-sql.widgets.sql
                           src:x:/@micro.evaluate.file/*
                         return
                           items
+
+
+                      /*
+                       * Invoked when some item in our treeview is selected.
+                       */
                       .onselect
 
                         /*
@@ -132,13 +146,17 @@ create-event:hyper-sql.widgets.sql
                   class:shaded rounded air-inner
                   widgets
 
+
                     /*
                      * CodeMirror editor for writing SQL.
                      */
                     micro.widgets.codemirror
                       height:150px
                       mode:sql
+                      keys
+                        Alt-E:p5.$('hyper-sql-execute-sql').raise('onclick');
                       events
+
 
                         /*
                          * Invoked when for some reasons we should populate our
@@ -153,6 +171,7 @@ create-event:hyper-sql.widgets.sql
                           micro.widgets.codemirror.set-value:x:/../*/_event?value
                             value:x:/../*/_arg?value
 
+
                         /*
                          * Returns the current SQL to caller.
                          */
@@ -164,11 +183,13 @@ create-event:hyper-sql.widgets.sql
                           micro.widgets.codemirror.get-value:x:/../*/_event?value
                           return:x:/-/*?value
 
+
                     /*
                      * Wrapper for our datagrid that displays the result of execution of SQL.
                      */
-                    container
+                    container:hyper-sql-results-grid-wrapper
                       events
+
 
                         /*
                          * Invoked when we for some reasons should execute specified [_arg]
@@ -177,76 +198,9 @@ create-event:hyper-sql.widgets.sql
                         hyper-sql.execute-sql
 
                           /*
-                           * Opening up a database connection, and executing our SQL.
+                           * Evaluating file responsible for creating and populating
+                           * our results datagrid.
                            */
-                          hyper-sql.database.get
-                          p5.mysql.connect:[{0}]
-                            :x:/@hyper-sql.database.get?value
-                            p5.mysql.select:x:/../*/_arg?value
-                              limit:50
-
-                          /*
-                           * Deleting our old datagrid, if it exists.
-                           */
-                          if
-                            fetch:x:/0/0?value
-                              widget-exists:hyper-sql-results-grid
-                            delete-widget:hyper-sql-results-grid
-
-                          /*
-                           * Verifying SQL actually yielded a result.
-                           */
-                          if:x:/@p5.mysql.connect/*/p5.mysql.select/*
-                            not
-                            micro.windows.info:SQL successfully executed
-                              class:micro-windows-info success
-                            return
-
-                          /*
-                           * Creating column headers for our datagrid.
-                           */
-                          for-each:x:/@p5.mysql.connect/*/p5.mysql.select/0/*
-                            set:x:/+/*/*?name
-                              src:x:/@_dp/#?name
-                            add:x:/../*/create-widgets/*/micro.widgets.grid/*/columns
-                              src
-                                foo
-
-                          /*
-                           * Creating rows for our datagrid.
-                           */
-                          for-each:x:/@p5.mysql.connect/*/p5.mysql.select/*
-                            add:x:/../*/create-widgets/*/micro.widgets.grid/*/rows
-                              src
-                                item
-                                  .row
-                                    onclick
-
-                                      /*
-                                       * Evaluating file responsible for allowing user to
-                                       * view the details of the record.
-                                       */
-                                      micro.css.toggle:x:/../*/_event?value
-                                        class:hyper-sql-view-details
-
-                            for-each:x:/@_dp/#/*
-                              set:x:/+2/*/*?name
-                                src:x:/@_dp/#?name
-                              eval-x:x:/+/*/*/*/*/*
-                              add:x:/../*/create-widgets/*/micro.widgets.grid/*/rows/0/-
-                                src
-                                  foo
-                                    widgets
-                                      span
-                                        innerValue:x:/@_dp/#?value
-
-                          /*
-                           * Creating a new datagrid, wrapping our result from the above
-                           * SQL execution.
-                           */
-                          create-widgets
-                            micro.widgets.grid:hyper-sql-results-grid
-                              class:hyper-sql-datagrid striped hover
-                              parent:x:/../*/_event?value
-                              columns
-                              rows
+                          eval-x:x:/+/*
+                          micro.evaluate.file:@HYPER-SQL/helpers/execute-sql.hl
+                            sql:x:/../*/_arg?value

@@ -1,10 +1,10 @@
-
 /*
  * Toolbar button that allows the user to execute his SQL, and display
  * its result in a datagrid.
  */
-button
+button:hyper-sql-execute-sql
   innerValue:@"<span class=""icon-play3""></span>"
+  title:Executes the SQL in your CodeMirror instance
   onclick
 
     /*

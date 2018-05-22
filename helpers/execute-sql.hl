@@ -1,0 +1,83 @@
+
+/*
+ * File responsible for executing specified __[sql]__ SQL.
+ */
+
+
+
+
+
+/*
+ * Opening up a database connection, and executing our SQL.
+ */
+hyper-sql.database.get
+p5.mysql.connect:[{0}]
+  :x:/@hyper-sql.database.get?value
+  p5.mysql.select:x:/../*/sql?value
+    limit:50
+
+/*
+ * Deleting our old datagrid, if it exists.
+ */
+if
+  fetch:x:/0/0?value
+    widget-exists:hyper-sql-results-grid
+  delete-widget:hyper-sql-results-grid
+
+/*
+ * Verifying SQL actually yielded a result.
+ */
+if:x:/@p5.mysql.connect/*/p5.mysql.select/*
+  not
+  micro.windows.info:SQL successfully executed
+    class:micro-windows-info success
+  return
+
+/*
+ * Creating column headers for our datagrid.
+ */
+for-each:x:/@p5.mysql.connect/*/p5.mysql.select/0/*
+  set:x:/+/*/*?name
+    src:x:/@_dp/#?name
+  add:x:/../*/create-widgets/*/micro.widgets.grid/*/columns
+    src
+      foo
+
+/*
+ * Creating rows for our datagrid.
+ */
+for-each:x:/@p5.mysql.connect/*/p5.mysql.select/*
+  add:x:/../*/create-widgets/*/micro.widgets.grid/*/rows
+    src
+      item
+        .row
+          onclick
+
+            /*
+             * Evaluating file responsible for allowing user to
+             * view the details of the record.
+             */
+            micro.css.toggle:x:/../*/_event?value
+              class:hyper-sql-view-details
+
+  for-each:x:/@_dp/#/*
+    set:x:/+2/*/*?name
+      src:x:/@_dp/#?name
+    eval-x:x:/+/*/*/*/*/*
+    add:x:/../*/create-widgets/*/micro.widgets.grid/*/rows/0/-
+      src
+        foo
+          widgets
+            span
+              innerValue:x:/@_dp/#?value
+
+/*
+ * Creating a new datagrid, wrapping our result from the above
+ * SQL execution.
+ */
+create-widgets
+  micro.widgets.grid:hyper-sql-results-grid
+    class:hyper-sql-datagrid striped hover
+    parent:hyper-sql-results-grid-wrapper
+    columns
+    rows

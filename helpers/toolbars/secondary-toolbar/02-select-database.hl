@@ -3,6 +3,7 @@
  */
 container
   element:select
+  title:Your 'active' database
   oninit
 
     /*
