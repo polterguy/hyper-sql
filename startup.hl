@@ -1,0 +1,21 @@
+/*
+ * Startup file for Hyper SQL.
+ * Creates _"path"_ event and evaluates all files in _"/startup/"_ folder for Hyper SQL.
+ */
+
+
+/*
+ * This is our _"path"_ Active Event for module.
+ */
+micro.path.get-folder:x:/..?name
+trim-right:x:/@micro.path.get-folder?value
+  chars:/
+eval-x:x:/+/*
+create-event:p5.io.unroll-path.@HYPER-SQL
+  return:x:/@trim-right?value
+
+
+/*
+ * Evaluating all other startup files.
+ */
+micro.evaluate.folder:@HYPER-SQL/startup/

@@ -1,0 +1,90 @@
+/*
+ * File responsible for databinding the tree view that serves as our _"server explorer"_,
+ * and allows the user to browse the different objects in his MySQL instance, such as
+ * databases, tables, etc.
+ */
+
+
+
+
+
+/*
+ * Items to databind our tree view widget towards.
+ */
+.items
+
+
+
+
+
+/*
+ * Figuring out item type.
+ */
+if:x:/../*/item?value
+  =:.
+
+  /*
+   * Root server item, finding all databases in server, and populating
+   * our tree accordingly.
+   */
+  p5.mysql.connect:[sys]
+    p5.mysql.select:show databases
+    for-each:x:/@p5.mysql.select/*
+      add:x:/../*/.items
+        src:"{0}:..database..{1}"
+          :x:/@_dp/#/*?value
+          :x:/@_dp/#/*?value
+else-if
+  starts-with:x:/../*/item?value
+    src:..database..
+
+  /*
+   * Database object retrieval, retrieving all tables in database,
+   * and returning these to caller.
+   */
+  replace:x:/../*/item?value
+    src:..database..
+  p5.mysql.connect:[{0}]
+    :x:/@replace?value
+    p5.mysql.select:show tables
+    for-each:x:/@p5.mysql.select/*
+      add:x:/../*/.items
+        src:"{0}:..table..{1}..{2}"
+          :x:/@_dp/#/*?value
+          :x:/@replace?value
+          :x:/@_dp/#/*?value
+else-if
+  starts-with:x:/../*/item?value
+    src:..table..
+
+  /*
+   * Database object retrieval, retrieving all tables in database,
+   * and returning these to caller.
+   */
+  replace:x:/../*/item?value
+    src:..table..
+  split:x:/@replace?value
+    =:..
+  p5.mysql.connect:[information_schema]
+    p5.mysql.select:@"select * from columns where table_schema = @schema and table_name = @table order by table_name, ordinal_position"
+      @schema:x:/@split/0?name
+      @table:x:/@split/0/-?name
+    for-each:x:/@p5.mysql.select/*
+      add:x:/../*/.items
+        src:"{0}:..column..{1}..{2}..{3}"
+          :x:/@_dp/#/*/COLUMN_NAME?value
+          :x:/@split/0?name
+          :x:/@split/0/-?name
+          :x:/@_dp/#/*/COLUMN_NAME?value
+      add:x:/../*/.items/0/-
+        src
+          class:file tree-leaf
+
+
+
+
+
+/*
+ * Making sure we return our items to caller.
+ */
+return:x:/@.items/*

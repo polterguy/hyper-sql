@@ -1,0 +1,13 @@
+/*
+ * Uninstalls Hyper SQL.
+ */
+
+
+
+
+
+/*
+ * Deleting all relevant Active Events, and that's it.
+ */
+delete-event:p5.io.unroll-path.@HYPER-SQL
+vocabulary:~hyper-sql.

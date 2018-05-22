@@ -1,0 +1,39 @@
+/*
+ * Launches Hyper SQL by including Hyper SQL's CSS file, creating
+ * a wire frame, and instantiating __[hyper-sql.widgets.sql]__.
+ *
+ * **Notice**, almost the entirety of Hyper SQL is actually encapsulated
+ * in the __[hyper-sql.widgets.sql]__ extension widget.
+ */
+
+
+
+
+
+/*
+ * Setting title of our page.
+ */
+p5.web.page.set-title:Hyper SQL
+
+
+
+
+
+/*
+ * Including main Micro CSS files.
+ */
+micro.css.include
+hyper-sql.version
+p5.web.include-css-file:@HYPER-SQL/media/main.css?v={0}
+  :x:/@hyper-sql.version?value
+
+
+
+
+
+/*
+ * Creating main Hyper SQL container widget.
+ */
+create-widgets
+  hyper-sql.widgets.sql
+

@@ -1,0 +1,70 @@
+/*
+ * Select database dropdown list.
+ */
+container
+  element:select
+  oninit
+
+    /*
+     * Populating selector initially with databases.
+     */
+    hyper-sql.databases.changed
+
+  events
+
+
+    /*
+     * Sink invoked when the active database object is changed.
+     */
+    hyper-sql.object-explorer.selected-item-changed
+
+      /*
+       * Checking if selected object is a database, either directly or
+       * indirectly - And if so, making sure we update the selected
+       * value of our dropdown.
+       */
+      if:x:/../*/_arg?value
+        =:database
+        or:x:/../*/_arg?value
+          =:table
+        or:x:/../*/_arg?value
+          =:column
+        set-widget-property:x:/../*/_event?value
+          value:x:/../*/database?value
+
+
+    /*
+     * Invoked whenever we for some reasons needs to retrieve the currently
+     * selected database.
+     */
+    hyper-sql.database.get
+      get-widget-property:x:/../*/_event?value
+        value
+      return:x:/-/*/*?value
+
+
+    /*
+     * Sink invoked when the databases list has been changed somehow,
+     * or the select dropdown for some reasons needs to be changed.
+     */
+    hyper-sql.databases.changed
+
+      /*
+       * Clearing old option values, and creating our "default select database" option.
+       */
+      clear-widget:x:/../*/_event?value
+      create-widget
+        parent:x:/../*/_event?value
+        element:option
+        innerValue:Select database ...
+
+      /*
+       * Figuring out all databases, and creating one option element for each.
+       */
+      p5.mysql.connect:[sys]
+        p5.mysql.select:show databases
+        for-each:x:/@p5.mysql.select/*
+          create-widget
+            parent:x:/../*/_event?value
+            element:option
+            innerValue:x:/@_dp/#/*?value

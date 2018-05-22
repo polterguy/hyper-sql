@@ -1,0 +1,13 @@
+/*
+ * The desktop widget for Hyper SQL.
+ */
+container
+  element:a
+  class:jumbo-button
+  title:A web based MySQL Workbench
+  widgets
+    span
+      innerValue:Hyper SQL
+    literal
+      element:span
+      class:icon-omega

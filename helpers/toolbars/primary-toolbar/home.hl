@@ -1,0 +1,9 @@
+/*
+ * Home toolbar button, launches desktop (or default app).
+ */
+a
+  href:/
+  role:button
+  class:button
+  innerValue:@"<span class=""icon-home3""></span>"
+  title:Close Hyper IDE

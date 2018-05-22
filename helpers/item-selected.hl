@@ -1,0 +1,65 @@
+/*
+ * File responsible for handling selections of database objects from our
+ * database explorer.
+ */
+
+
+
+
+
+/*
+ * Checking what type of item this is.
+ */
+if:x:/../*/item?value
+  =:.
+
+  /*
+   * Root server selected, notifying subscribers.
+   */
+  hyper-sql.object-explorer.selected-item-changed:.
+
+else-if
+  starts-with:x:/../*/item?value
+    src:..database..
+
+  /*
+   * A database object was selected.
+   */
+  replace:x:/../*/item?value
+    src:..database..
+  eval-x:x:/+/*
+  hyper-sql.object-explorer.selected-item-changed:database
+    database:x:/@replace?value
+
+else-if
+  starts-with:x:/../*/item?value
+    src:..table..
+
+    /*
+     * A table object was selected.
+     */
+  replace:x:/../*/item?value
+    src:..table..
+  split:x:/@replace?value
+    =:..
+  eval-x:x:/+/*
+  hyper-sql.object-explorer.selected-item-changed:table
+    database:x:/@split/0?name
+    table:x:/@split/0/-?name
+
+else-if
+  starts-with:x:/../*/item?value
+    src:..column..
+
+    /*
+     * A column object was selected.
+     */
+  replace:x:/../*/item?value
+    src:..column..
+  split:x:/@replace?value
+    =:..
+  eval-x:x:/+/*
+  hyper-sql.object-explorer.selected-item-changed:column
+    database:x:/@split/0?name
+    table:x:/@split/0/-2?name
+    column:x:/@split/0/-?name

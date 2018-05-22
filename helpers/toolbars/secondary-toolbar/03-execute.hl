@@ -1,0 +1,14 @@
+
+/*
+ * Toolbar button that allows the user to execute his SQL, and display
+ * its result in a datagrid.
+ */
+button
+  innerValue:@"<span class=""icon-play3""></span>"
+  onclick
+
+    /*
+     * Invokes event responsible for executing SQL and displaying its result.
+     */
+    hyper-sql.codemirror.get-sql
+    hyper-sql.execute-sql:x:/-?value

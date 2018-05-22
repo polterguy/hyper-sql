@@ -1,0 +1,23 @@
+.hyper-sql-datagrid {
+    table-layout: fixed;
+}
+.hyper-sql-datagrid tr td {
+    cursor: pointer;
+    vertical-align: top;
+}
+.hyper-sql-datagrid tr td span {
+    display: block;
+    max-height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.hyper-sql-datagrid tr.hyper-sql-view-details td {
+    overflow: auto;
+}
+.hyper-sql-datagrid tr.hyper-sql-view-details td span {
+    display: block;
+    white-space: pre;
+    max-height: unset;
+    overflow: unset;
+    text-overflow: unset;
+}

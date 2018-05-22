@@ -1,0 +1,10 @@
+/*
+ * Creates the __[hyper-sql.version]__ Active Event.
+ */
+
+/*
+ * This event will return the version of Hyper SQL back to caller.
+ */
+create-event:hyper-sql.version
+
+  return:decimal:8.2
