@@ -1,4 +1,3 @@
-
 /*
  * File responsible for executing specified __[sql]__ SQL.
  */
@@ -16,13 +15,18 @@ p5.mysql.connect:[{0}]
   p5.mysql.select:x:/../*/sql?value
     limit:50
 
+
+
+
+
 /*
- * Deleting our old datagrid, if it exists.
+ * Clearing old results, if existing.
  */
-if
-  fetch:x:/0/0?value
-    widget-exists:hyper-sql-results-grid
-  delete-widget:hyper-sql-results-grid
+clear-widget:hyper-sql-results-grid-wrapper
+
+
+
+
 
 /*
  * Verifying SQL actually yielded a result.
@@ -32,6 +36,10 @@ if:x:/@p5.mysql.connect/*/p5.mysql.select/*
   micro.windows.info:SQL successfully executed
     class:micro-windows-info success
   return
+
+
+
+
 
 /*
  * Creating column headers for our datagrid.
@@ -43,41 +51,94 @@ for-each:x:/@p5.mysql.connect/*/p5.mysql.select/0/*
     src
       foo
 
+
+
+
+
 /*
  * Creating rows for our datagrid.
  */
-for-each:x:/@p5.mysql.connect/*/p5.mysql.select/*
-  add:x:/../*/create-widgets/*/micro.widgets.grid/*/rows
-    src
-      item
-        .row
-          onclick
+add:x:/+/*
+  src:x:/@p5.mysql.connect/*/p5.mysql.select/*
+add:x:/../*/create-widgets/*/micro.widgets.grid/*/rows
+  micro.evaluate.file:@HYPER-SQL/helpers/create-grid-rows.hl
 
-            /*
-             * Evaluating file responsible for allowing user to
-             * view the details of the record.
-             */
-            micro.css.toggle:x:/../*/_event?value
-              class:hyper-sql-view-details
 
-  for-each:x:/@_dp/#/*
-    set:x:/+2/*/*?name
-      src:x:/@_dp/#?name
-    eval-x:x:/+/*/*/*/*/*
-    add:x:/../*/create-widgets/*/micro.widgets.grid/*/rows/0/-
-      src
-        foo
-          widgets
-            span
-              innerValue:x:/@_dp/#?value
+
+
+
+/*
+ * Checking if we had less than fifty items in our result,
+ * at which point we delete the "feed grid with more items" button.
+ */
+if:x:/@p5.mysql.connect/*/p5.mysql.select/*?count
+  <:int:50
+  set:x:/../*/create-widgets/*/div/=hyper-sql-feed-more-wrapper
+
+
+
+
 
 /*
  * Creating a new datagrid, wrapping our result from the above
  * SQL execution.
  */
+eval-x:x:/+/*/div/**(/.sql|/.database)
 create-widgets
   micro.widgets.grid:hyper-sql-results-grid
     class:hyper-sql-datagrid striped hover
     parent:hyper-sql-results-grid-wrapper
     columns
     rows
+  div:hyper-sql-feed-more-wrapper
+    class:right
+    parent:hyper-sql-results-grid-wrapper
+    widgets
+      button:hyper-sql-feed-more-btn
+        innerValue:More ...
+        title:Retrieves the next 50 records
+        onclick:"p5.$('hyper-sql-feed-more-btn').raise('.onclick',{onbefore:function(){p5.$('hyper-sql-cover').el.style.display='block';},onsuccess:function(){p5.$('hyper-sql-cover').el.style.display='none';}});return false;"
+        .page:0
+        .onclick
+
+          /*
+           * Forward evaluated above.
+           */
+          .database:x:/../*/hyper-sql.database.get?value
+          .sql:x:/../*/sql?value
+
+          /*
+           * Retrieving current [.page], and incrementing it by 50.
+           */
+          get-widget-property:x:/../*/_event?value
+            .page
+          +:x:/@get-widget-property/*/*?value.int
+            _:50
+          set-widget-property:x:/../*/_event?value
+            .page:x:/@+?value
+
+          /*
+           * Selecting items from database.
+           */
+          p5.mysql.connect:[{0}]
+            :x:/@.database?value
+            p5.mysql.select:x:/@.sql?value
+              offset:x:/@+?value
+              limit:50
+
+          /*
+           * Databinding grid.
+           */
+          add:x:/+/*
+            src:x:/@p5.mysql.connect/*/p5.mysql.select/*
+          add:x:/+
+            micro.evaluate.file:@HYPER-SQL/helpers/create-grid-rows.hl
+          micro.widgets.grid.databind:hyper-sql-results-grid
+            keep-items:true
+
+          /*
+           * Checking if this was our last page.
+           */
+          if:x:/@p5.mysql.connect/*/p5.mysql.select/*?count
+            <:int:50
+            delete-widget:hyper-sql-feed-more-wrapper

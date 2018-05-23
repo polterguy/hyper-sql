@@ -211,3 +211,9 @@ create-event:hyper-sql.widgets.sql
                           eval-x:x:/+/*
                           micro.evaluate.file:@HYPER-SQL/helpers/execute-sql.hl
                             sql:x:/../*/_arg?value
+
+        /*
+         * Cover widget used during potential long operations.
+         */
+        micro.widgets.cover:hyper-sql-cover
+          style:"display:none;"

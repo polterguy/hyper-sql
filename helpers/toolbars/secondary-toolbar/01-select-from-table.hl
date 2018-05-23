@@ -2,7 +2,7 @@
  * Creates our "shortcut" button, that populates the CodeMirror editor
  * with "select * from database.table" and executes it.
  */
-button
+button:hyper-sql-select-from-table
   innerValue:@"<span class=""icon-eye""></span>"
   title:Views the records in your currently selected table
   disabled
@@ -37,7 +37,8 @@ button
         set-widget-property:x:/../*/_event?value
           disabled
 
-  onclick
+  onclick:"p5.$('hyper-sql-select-from-table').raise('.onclick',{onbefore:function(){p5.$('hyper-sql-cover').el.style.display='block';},onsuccess:function(){p5.$('hyper-sql-cover').el.style.display='none';}});return false;"
+  .onclick
 
     /*
      * Retrieving active database and table, for then to populate CodeMirror

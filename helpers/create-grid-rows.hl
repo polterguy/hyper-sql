@@ -1,0 +1,39 @@
+
+/*
+ * Creates a collection of items to databind the results datagrid towards.
+ *
+ * Expects a bunch of __[row]__ items.
+ */
+.signal
+for-each:x:/@.signal/--/<-
+  add:x:/../*/return
+    src
+      item
+        .row
+          onclick
+
+            /*
+             * Toggling "view details" CSS class on row.
+             */
+            micro.css.toggle:x:/../*/_event?value
+              class:hyper-sql-view-details
+
+  for-each:x:/@_dp/#/*
+    set:x:/+2/*/*?name
+      src:x:/@_dp/#?name
+    eval-x:x:/+/*/*/*/*/*
+    add:x:/../*/return/0/-
+      src
+        foo
+          widgets
+            span
+              innerValue:x:/@_dp/#?value
+
+
+
+
+
+/*
+ * Returns items to caller.
+ */
+return
