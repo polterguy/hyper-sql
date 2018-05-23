@@ -11,6 +11,18 @@ container
      */
     hyper-sql.databases.changed
 
+  onchange
+
+    /*
+     * Invoking file responsible for populating JavaScript autocomplete object
+     * on the client side.
+     */
+    get-widget-property:x:/../*/_event?value
+      value
+    eval-x:x:/+/*
+    micro.evaluate.file:@HYPER-SQL/helpers/populate-autocompleter.hl
+      database:x:/@get-widget-property/*/*?value
+
   events
 
 

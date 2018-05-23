@@ -1,0 +1,79 @@
+
+/*
+ * File responsible for populating the AutoCompleter on the client side
+ * for the CodeMirror editor. It will pass on all tables, and all of their
+ * columns to the client, such that CodeMirror knows which tables/columns
+ * to use when populating its AutoCompleter.
+ */
+
+
+
+
+
+/*
+ * Opening up database, and retrieving tables and columns, and dynamically
+ * building our JavaScript to include on the client side.
+ */
+.js:@"
+CodeMirror.commands.autocomplete = function(cm) {
+  CodeMirror.showHint (cm, CodeMirror.hint.sql, {
+    tables: {
+"
+p5.mysql.connect:[{0}]
+  :x:/../*/database?value
+  p5.mysql.select:show tables
+  for-each:x:/@p5.mysql.select/*
+    set:x:/@.js?value
+      src:{0}{1}
+        :x:/@.js?value
+        :@"""{0}"":["
+          :x:/@_dp/#/*?value
+    p5.mysql.select:@"select COLUMN_NAME from information_schema.columns where table_schema = @schema and table_name = @table order by table_name, ordinal_position"
+      @schema:x:/../*/database?value
+      @table:x:/@_dp/#/*?value
+    for-each:x:/@p5.mysql.select/*
+      set:x:/@.js?value
+        src:{0}{1}
+          :x:/@.js?value
+          :@"""{0}"","
+            :x:/@_dp/#/*?value
+
+    /*
+     * Removing excessive "," at the end after columns.
+     */
+    set:x:/@.js?value
+      trim-right:x:/@.js?value
+        chars:,
+    set:x:/@.js?value
+      src:{0}],
+        :x:/@.js?value
+
+  /*
+   * Removing excessive "," at the end after tables.
+   */
+  set:x:/@.js?value
+    trim-right:x:/@.js?value
+      chars:,
+
+
+
+
+
+/*
+ * "Closing" our JavaScript object.
+ */
+set:x:/@.js?value
+  src:@"{0}
+    }}
+  }});
+}}"
+    :x:/@.js?value
+
+
+
+
+
+/*
+ * Passing JavaScript to populate AutoCompleter back to client.
+ */
+p5.web.send-javascript:x:/@.js?value

@@ -187,7 +187,7 @@ p5.hyper_sql_long_event = function (wdg, evt) {
                      */
                     micro.widgets.codemirror
                       height:150px
-                      mode:sql
+                      mode:text/x-mysql
                       keys
                         Alt-E:p5.hyper_sql_long_event ('hyper-sql-execute-sql', '.onclick');
                       events

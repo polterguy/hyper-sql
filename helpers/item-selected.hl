@@ -10,6 +10,7 @@
 /*
  * Checking what type of item this is.
  */
+.database
 if:x:/../*/item?value
   =:.
 
@@ -30,6 +31,8 @@ else-if
   eval-x:x:/+/*
   hyper-sql.object-explorer.selected-item-changed:database
     database:x:/@replace?value
+  set:x:/@.database?value
+    src:x:/@replace?value
 
 else-if
   starts-with:x:/../*/item?value
@@ -46,6 +49,8 @@ else-if
   hyper-sql.object-explorer.selected-item-changed:table
     database:x:/@split/0?name
     table:x:/@split/0/-?name
+  set:x:/@.database?value
+    src:x:/@split/0?name
 
 else-if
   starts-with:x:/../*/item?value
@@ -63,3 +68,23 @@ else-if
     database:x:/@split/0?name
     table:x:/@split/0/-2?name
     column:x:/@split/0/-?name
+  set:x:/@.database?value
+    src:x:/@split/0?name
+
+
+
+
+
+/*
+ * Checks to see if we (somehow) have an active database, at which point we populate
+ * the autocompleter for our CodeMirror instance.
+ */
+if:x:/@.database?value
+
+  /*
+   * Invoking file responsible for populating JavaScript autocomplete object
+   * on the client side.
+   */
+  eval-x:x:/+/*
+  micro.evaluate.file:@HYPER-SQL/helpers/populate-autocompleter.hl
+    database:x:/@.database?value
