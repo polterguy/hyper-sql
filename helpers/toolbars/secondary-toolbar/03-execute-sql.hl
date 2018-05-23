@@ -4,8 +4,8 @@
  */
 button:hyper-sql-execute-sql
   innerValue:@"<span class=""icon-play3""></span>"
-  title:Executes the SQL in your CodeMirror instance
-  onclick:"p5.$('hyper-sql-execute-sql').raise('.onclick',{onbefore:function(){p5.$('hyper-sql-cover').el.style.display='block';},onsuccess:function(){p5.$('hyper-sql-cover').el.style.display='none';}});return false;"
+  title:Executes your SQL
+  onclick:"return p5.hyper_sql_long_event ('hyper-sql-execute-sql', '.onclick')"
   .onclick
 
     /*

@@ -97,7 +97,7 @@ create-widgets
       button:hyper-sql-feed-more-btn
         innerValue:More ...
         title:Retrieves the next 50 records
-        onclick:"p5.$('hyper-sql-feed-more-btn').raise('.onclick',{onbefore:function(){p5.$('hyper-sql-cover').el.style.display='block';},onsuccess:function(){p5.$('hyper-sql-cover').el.style.display='none';}});return false;"
+        onclick:"return p5.hyper_sql_long_event ('hyper-sql-feed-more-btn', '.onclick')"
         .page:0
         .onclick
 

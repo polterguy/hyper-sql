@@ -39,6 +39,24 @@ create-event:hyper-sql.widgets.sql
     src:x:(/../*/class|/@.defaults/*/class)/$
   return
     container
+      oninit
+
+        /*
+         * Passing JavaScript function for "long operations" to client.
+         */
+        p5.web.send-javascript:@"
+p5.hyper_sql_long_event = function (wdg, evt) {
+  p5.$(wdg).raise (evt, {
+    onbefore: function () {p5.$('hyper-sql-cover').el.style.display='block';},
+    onsuccess: function () {p5.$('hyper-sql-cover').el.style.display='none';},
+    onerror: function (s,t,r) {
+      p5.$('hyper-sql-cover').el.style.display = 'none';
+      this.onerror (s,t,r);
+    }
+  });
+  return false;
+}"
+
       events
 
 
@@ -161,7 +179,7 @@ create-event:hyper-sql.widgets.sql
                       height:150px
                       mode:sql
                       keys
-                        Alt-E:p5.$('hyper-sql-execute-sql').raise('onclick');
+                        Alt-E:p5.hyper_sql_long_event ('hyper-sql-execute-sql', '.onclick');
                       events
 
 
