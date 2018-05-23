@@ -29,6 +29,78 @@ clear-widget:hyper-sql-results-grid-wrapper
 
 
 /*
+ * Checking if it's possible to create charts out of the result.
+ */
+if:x:/@p5.mysql.connect/*/p5.mysql.select/0/*?count
+  =:int:2
+  and:x:/@p5.mysql.connect/*/p5.mysql.select/*?count
+    <:int:30
+  and
+    p5.types.can-convert:x:/@p5.mysql.connect/*/p5.mysql.select/0/1?value
+      type:double
+
+  /*
+   * Graphs and charts can somehow be constructed from our above result.
+   */
+  add:x:/+/**/.data
+    src:x:/@p5.mysql.connect/*/p5.mysql.select/*
+  add:x:/../*/create-widgets
+    src
+      div
+        class:right strip
+        parent:hyper-sql-results-grid-wrapper
+        widgets
+          button
+            innerValue:@"<span class=""icon-pie-chart""></span>"
+            onclick
+
+              /*
+               * Creating a pie chart in a modal widget, displaying result set.
+               */
+              .data
+              for-each:x:/@.data/*
+                set:x:/+2/*/*?name
+                  src:x:/@_dp/#/0?value
+                eval-x:x:/+/*/*
+                add:x:/../*/create-widgets/*/*/*/micro.widgets.chart.pie/*/data
+                  src
+                    foo:x:/@_dp/#/1?value
+              create-widgets
+                micro.widgets.modal
+                  widgets
+                    h3
+                      innerValue:Pie chart of your data
+                    micro.widgets.chart.pie
+                      data
+
+          button
+            innerValue:@"<span class=""icon-stats-bars""></span>"
+            onclick
+
+              /*
+               * Creating a column chart in a modal widget, displaying result set.
+               */
+              .data
+              for-each:x:/@.data/*
+                set:x:/+2/*/*?name
+                  src:x:/@_dp/#/0?value
+                eval-x:x:/+/*/*
+                add:x:/../*/create-widgets/*/*/*/micro.widgets.chart.column/*/data
+                  src
+                    foo:x:/@_dp/#/1?value
+              create-widgets
+                micro.widgets.modal
+                  widgets
+                    h3
+                      innerValue:Bar chart of your data
+                    micro.widgets.chart.column
+                      data
+
+
+
+
+
+/*
  * Verifying SQL actually yielded a result.
  */
 if:x:/@p5.mysql.connect/*/p5.mysql.select/*
