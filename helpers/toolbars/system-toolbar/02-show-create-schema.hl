@@ -1,4 +1,3 @@
-
 /*
  * Creates our "show create database" button.
  */
@@ -73,7 +72,7 @@ button
             h3
               innerValue:Create table
             micro.widgets.codemirror
-              mode:sql
+              mode:text/x-mysql
               value:x:/@.sql?value
             div
               class:right
