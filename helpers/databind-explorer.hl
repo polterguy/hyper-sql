@@ -34,6 +34,10 @@ if:x:/../*/item?value
         src:"{0}:..database..{1}"
           :x:/@_dp/#/*?value
           :x:/@_dp/#/*?value
+      add:x:/../*/.items/0/-
+        src
+          class:hyper-sql-database
+
 else-if
   starts-with:x:/../*/item?value
     src:..database..
@@ -53,6 +57,10 @@ else-if
           :x:/@_dp/#/*?value
           :x:/@replace?value
           :x:/@_dp/#/*?value
+      add:x:/../*/.items/0/-
+        src
+          class:hyper-sql-table
+
 else-if
   starts-with:x:/../*/item?value
     src:..table..
@@ -71,14 +79,26 @@ else-if
       @table:x:/@split/0/-?name
     for-each:x:/@p5.mysql.select/*
       add:x:/../*/.items
-        src:"{0}:..column..{1}..{2}..{3}"
+        src:"<strong>{0}</strong> - {1}:..column..{2}..{3}..{4}"
           :x:/@_dp/#/*/COLUMN_NAME?value
+          :x:/@_dp/#/*/COLUMN_TYPE?value
           :x:/@split/0?name
           :x:/@split/0/-?name
           :x:/@_dp/#/*/COLUMN_NAME?value
-      add:x:/../*/.items/0/-
-        src
-          class:file tree-leaf
+      if:x:/@_dp/#/*/COLUMN_KEY?value
+        =:PRI
+        add:x:/../*/.items/0/-
+          src
+            class:hyper-sql-primary-key
+      else
+        add:x:/../*/.items/0/-
+          src
+            class:hyper-sql-field
+      if:x:/@_dp/#/*/IS_NULLABLE?value
+        !=:NO
+        set:x:/../*/.items/0/-?name
+          src:{0}, null
+            :x:/../*/.items/0/-?name
 
 
 
