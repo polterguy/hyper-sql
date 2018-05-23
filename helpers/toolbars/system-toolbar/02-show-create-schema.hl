@@ -1,0 +1,97 @@
+
+/*
+ * Creates our "show create database" button.
+ */
+button
+  innerValue:@"<span class=""icon-cogs""></span>"
+  title:Shows you the entire create database schema for your currently selected database
+  disabled
+  events
+
+
+    /*
+     * Invoked when for some reasons the active database explorer object is changed.
+     */
+    hyper-sql.object-explorer.selected-item-changed
+
+      /*
+       * Checking if selected object is a database, either directly or
+       * indirectly - And if so, enabling the button.
+       */
+      if:x:/../*/_arg?value
+        =:database
+        or:x:/../*/_arg?value
+          =:table
+        or:x:/../*/_arg?value
+          =:column
+        set-widget-property:x:/../*/_event?value
+          .database:x:/../*/database?value
+        delete-widget-property:x:/../*/_event?value
+          disabled
+
+      else
+
+        /*
+         * No database is currently selected, neither directly nor indirectly,
+         * hence disabling the button.
+         */
+        set-widget-property:x:/../*/_event?value
+          disabled
+
+  onclick
+
+    /*
+     * Retrieving active database and table, and figuring out how to reproduce
+     * the database.
+     */
+    get-widget-property:x:/../*/_event?value
+      .database
+    .sql
+    p5.mysql.connect:[{0}]
+      :x:/@get-widget-property/*/*/.database?value
+      p5.mysql.select:show create database `{0}`
+        :x:/@get-widget-property/*/*/.database?value
+      set:x:/@.sql?value
+        src:"{0}\r\n\r\n"
+          :x:/@p5.mysql.select/*/*/Create Database?value
+      p5.mysql.select:show tables
+      for-each:x:/@p5.mysql.select/*
+        p5.mysql.select:show create table `{0}`
+          :x:/@_dp/#/*?value
+        set:x:/@.sql?value
+          src:"{0}{1}\r\n\r\n"
+            :x:/@.sql?value
+            :x:/@p5.mysql.select/*/*/Create Table?value
+
+      /*
+       * Showing our "create table" SQL in a modal widget.
+       */
+      eval-x:x:/+/*/*/*/*/value
+      create-widgets
+        micro.widgets.modal:hyper-sql-show-create-table-modal
+          widgets
+            h3
+              innerValue:Create table
+            micro.widgets.codemirror
+              mode:sql
+              value:x:/@.sql?value
+            div
+              class:right
+              widgets
+                button
+                  title:Close modal window
+                  class:large
+                  innerValue:@"<span class=""icon-cross""></span>"
+                  oninit
+
+                    /*
+                     * Setting initial focus to "close" button.
+                     */
+                    micro.page.set-focus:x:/../*/_event?value
+
+                  onclick
+
+                    /*
+                     * Simply deleting modal widget.
+                     */
+                    delete-widget:hyper-sql-show-create-table-modal

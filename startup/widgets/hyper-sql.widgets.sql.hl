@@ -98,8 +98,18 @@ p5.hyper_sql_long_event = function (wdg, evt) {
                  * plugins.
                  */
                 micro.widgets.file
-                  class:strip right hyper-ide-toolbar
+                  class:strip right toolbar
                   folder:@HYPER-SQL/helpers/toolbars/primary-toolbar/
+
+
+                /*
+                 * System tools toolbar.
+                 *
+                 * Contains "create backup" button, among other things.
+                 */
+                micro.widgets.file
+                  class:strip right
+                  folder:@HYPER-SQL/helpers/toolbars/system-toolbar/
 
 
                 /*
@@ -108,8 +118,8 @@ p5.hyper_sql_long_event = function (wdg, evt) {
                  * Contains help button, settings button, close all editors button,
                  * and "global plugins" for Hyper IDE.
                  */
-                micro.widgets.file:hyper-ide-toolbars
-                  class:strip right hyper-ide-toolbar
+                micro.widgets.file
+                  class:strip right
                   folder:@HYPER-SQL/helpers/toolbars/secondary-toolbar/
 
 
