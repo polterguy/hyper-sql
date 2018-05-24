@@ -17,6 +17,7 @@ for-each:x:/../*/items/*
               class:hyper-sql-view-details
 
   for-each:x:/@_dp/#/*
+    p5.html.html-encode:x:/@_dp/#?value
     set:x:/+2/*/*?name
       src:x:/@_dp/#?name
     eval-x:x:/+/*/*/*/*/*
@@ -25,7 +26,7 @@ for-each:x:/../*/items/*
         foo
           widgets
             span
-              innerValue:x:/@_dp/#?value
+              innerValue:x:/@p5.html.html-encode?value
 
 
 
