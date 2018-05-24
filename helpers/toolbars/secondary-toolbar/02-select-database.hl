@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Select database dropdown list.
  */
 container
@@ -22,6 +22,7 @@ container
     eval-x:x:/+/*
     micro.evaluate.file:@HYPER-SQL/helpers/populate-autocompleter.hl
       database:x:/@get-widget-property/*/*?value
+    hyper-sql.active-database.changed:x:/@get-widget-property/*/*?value
 
   events
 
@@ -29,7 +30,7 @@ container
     /*
      * Sink invoked when the active database object is changed.
      */
-    hyper-sql.object-explorer.selected-item-changed
+    hyper-sql.database-explorer.selected-item-changed
 
       /*
        * Checking if selected object is a database, either directly or

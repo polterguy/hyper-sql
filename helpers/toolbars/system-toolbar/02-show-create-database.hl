@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Creates our "show create database" button.
  */
 button
@@ -11,7 +11,7 @@ button
     /*
      * Invoked when for some reasons the active database explorer object is changed.
      */
-    hyper-sql.object-explorer.selected-item-changed
+    hyper-sql.database-explorer.selected-item-changed
 
       /*
        * Checking if selected object is a database, either directly or

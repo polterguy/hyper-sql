@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Toolbar button that allows the user to execute his SQL, and display
  * its result in a datagrid.
  */
@@ -11,5 +11,5 @@ button:hyper-sql-execute-sql
     /*
      * Invokes event responsible for executing SQL and displaying its result.
      */
-    hyper-sql.codemirror.get-sql
+    hyper-sql.sql-editor.get-sql
     hyper-sql.execute-sql:x:/-?value

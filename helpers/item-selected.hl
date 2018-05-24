@@ -1,4 +1,4 @@
-/*
+﻿/*
  * File responsible for handling selections of database objects from our
  * database explorer.
  */
@@ -17,7 +17,7 @@ if:x:/../*/item?value
   /*
    * Root server selected, notifying subscribers.
    */
-  hyper-sql.object-explorer.selected-item-changed:.
+  hyper-sql.database-explorer.selected-item-changed:.
 
 else-if
   starts-with:x:/../*/item?value
@@ -29,7 +29,7 @@ else-if
   replace:x:/../*/item?value
     src:..database..
   eval-x:x:/+/*
-  hyper-sql.object-explorer.selected-item-changed:database
+  hyper-sql.database-explorer.selected-item-changed:database
     database:x:/@replace?value
   set:x:/@.database?value
     src:x:/@replace?value
@@ -46,7 +46,7 @@ else-if
   split:x:/@replace?value
     =:..
   eval-x:x:/+/*
-  hyper-sql.object-explorer.selected-item-changed:table
+  hyper-sql.database-explorer.selected-item-changed:table
     database:x:/@split/0?name
     table:x:/@split/0/-?name
   set:x:/@.database?value
@@ -64,7 +64,7 @@ else-if
   split:x:/@replace?value
     =:..
   eval-x:x:/+/*
-  hyper-sql.object-explorer.selected-item-changed:column
+  hyper-sql.database-explorer.selected-item-changed:column
     database:x:/@split/0?name
     table:x:/@split/0/-2?name
     column:x:/@split/0/-?name

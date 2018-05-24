@@ -20,6 +20,13 @@ p5.mysql.connect:[{0}]
     limit:50
 
   /*
+   * Making sure we notify any subscribers.
+   */
+  add:x:/+
+    src:x:/@p5.mysql.select/*
+  hyper-sql.sql.executed:x:/../*/sql?value
+
+  /*
    * Storing SQL in session, such that we can populate the CodeMirror with
    * it, if user leaves page, and comes back later.
    */

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Creates our "shortcut" button, that populates the CodeMirror editor
  * with "select * from database.table" and executes it.
  */
@@ -12,7 +12,7 @@ button:hyper-sql-select-from-table
     /*
      * Invoked when for some reasons the active database is changed.
      */
-    hyper-sql.object-explorer.selected-item-changed
+    hyper-sql.database-explorer.selected-item-changed
 
       /*
        * Checking if selected object is a database, either directly or
@@ -47,7 +47,7 @@ button:hyper-sql-select-from-table
     get-widget-property:x:/../*/_event?value
       .database
       .table
-    hyper-sql.codemirror.populate-with-sql:select * from `{0}`.`{1}`
+    hyper-sql.sql-editor.set-sql:select * from `{0}`.`{1}`
       :x:/@get-widget-property/*/*/.database?value
       :x:/@get-widget-property/*/*/.table?value
     hyper-sql.execute-sql:select * from `{0}`.`{1}`

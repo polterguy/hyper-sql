@@ -11,3 +11,5 @@
  */
 delete-event:p5.io.unroll-path.@HYPER-SQL
 vocabulary:~hyper-sql.
+delete-event:x:/-/*?value
+delete-event:desktop.help-files.08-hyper-sql

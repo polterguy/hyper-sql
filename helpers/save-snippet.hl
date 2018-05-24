@@ -1,4 +1,4 @@
-/*
+﻿/*
  * File responsible for allowing user to save his snippet.
  */
 create-widgets
@@ -123,10 +123,10 @@ create-widgets
               /*
                * Retrieving code, and saving our file containing our snippet.
                */
-              hyper-sql.codemirror.get-sql
+              hyper-sql.sql-editor.get-sql
               save-file:~/documents/private/hyper-sql/{0}
                 :x:/@get-widget-property/*/*?value
-                src:x:/@hyper-sql.codemirror.get-sql?value
+                src:x:/@hyper-sql.sql-editor.get-sql?value
 
               /*
                * Deletes modal widget.

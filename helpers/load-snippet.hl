@@ -62,7 +62,7 @@ create-widgets
                           .name:x:/@split/0/-?name
                           load-file:~/documents/private/hyper-sql/{0}
                             :x:/@.name?value
-                          hyper-sql.codemirror.populate-with-sql:x:/@load-file/*?value
+                          hyper-sql.sql-editor.set-sql:x:/@load-file/*?value
                           delete-widget:hyper-sql-load-snippet
 
                       Name:x:/@split/0/-?name
@@ -94,9 +94,10 @@ create-widgets
       div
         class:right
         widgets
-          button
+          button:hyper-sql-close-load-snippet-button
             innerValue:@"<span class=""icon-cross""></span>"
             class:large
+            onkeydown:@"if (event.keyCode == 27) {p5.$('hyper-sql-close-load-snippet-button').raise('onclick');return false;}"
             oninit
 
               /*

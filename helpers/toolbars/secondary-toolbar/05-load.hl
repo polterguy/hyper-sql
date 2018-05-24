@@ -1,8 +1,7 @@
-
 /*
  * Toolbar button that allows the user to load a stored snippet.
  */
-button
+button:hyper-sql-load-snippet-btn
   innerValue:@"<span class=""icon-folder-open""></span>"
   title:Loads a stored SQL snippet
   onclick

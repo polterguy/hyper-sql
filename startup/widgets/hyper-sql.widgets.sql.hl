@@ -116,7 +116,7 @@ p5.hyper_sql_long_event = function (wdg, evt) {
                 /*
                  * System tools toolbar.
                  *
-                 * Contains "create backup" button, among other things.
+                 * Contains view "create table/database" button, among other things.
                  */
                 micro.widgets.file
                   class:strip right
@@ -201,6 +201,8 @@ p5.hyper_sql_long_event = function (wdg, evt) {
                       mode:text/x-mysql
                       keys
                         Alt-E:p5.hyper_sql_long_event ('hyper-sql-execute-sql', '.onclick');
+                        Alt-S:p5.$('hyper-sql-save-snippet-btn').raise('onclick');
+                        Alt-L:p5.$('hyper-sql-load-snippet-btn').raise('onclick');
                       events
 
 
@@ -208,7 +210,7 @@ p5.hyper_sql_long_event = function (wdg, evt) {
                          * Invoked when for some reasons we should populate our
                          * CodeMirror editor with some SQL.
                          */
-                        hyper-sql.codemirror.populate-with-sql
+                        hyper-sql.sql-editor.set-sql
 
                           /*
                            * Sets the value of our CodeMirror editor.
@@ -221,7 +223,7 @@ p5.hyper_sql_long_event = function (wdg, evt) {
                         /*
                          * Returns the current SQL to caller.
                          */
-                        hyper-sql.codemirror.get-sql
+                        hyper-sql.sql-editor.get-sql
 
                           /*
                            * Retrieves SQL from CodeMirror editor, and returns to caller.
