@@ -21,7 +21,9 @@
     overflow: unset;
     text-overflow: unset;
 }
-
+#hyper-sql-explorer .hyper-sql-database>a.item-label>span.icon:before {
+    content:'\e9ae';
+}
 #hyper-sql-explorer .hyper-sql-table>a.item-label>span.icon:before {
     content:'\ea70';
 }

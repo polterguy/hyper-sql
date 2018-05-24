@@ -33,6 +33,17 @@ create-event:hyper-sql.widgets.sql
     throw:Hyper SQL is already open
 
   /*
+   * Checking if we have some SQL in our session, and if so,
+   * making sure we populate our CodeMirror instance with it automatically.
+   */
+  p5.web.session.get:hyper-sql.current-sql
+  if:x:/@p5.web.session.get/*?value
+    eval-x:x:/+/*/*
+    add:x:/../*/return/**/micro.widgets.codemirror
+      src
+        value:x:/@p5.web.session.get/*?value
+
+  /*
    * Returning widget to caller.
    */
   add:x:/../*/return/*/container

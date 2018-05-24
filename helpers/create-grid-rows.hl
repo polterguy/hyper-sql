@@ -1,11 +1,9 @@
-
 /*
  * Creates a collection of items to databind the results datagrid towards.
  *
  * Expects a bunch of __[row]__ items.
  */
-.signal
-for-each:x:/@.signal/--/<-
+for-each:x:/../*/items/*
   add:x:/../*/return
     src
       item

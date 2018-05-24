@@ -7,145 +7,133 @@
 
 
 /*
- * Opening up a database connection, and executing our SQL.
+ * Opening up a database connection.
  */
 hyper-sql.database.get
 p5.mysql.connect:[{0}]
   :x:/@hyper-sql.database.get?value
+
+  /*
+   * Executing SQL.
+   */
   p5.mysql.select:x:/../*/sql?value
     limit:50
 
-
-
-
-
-/*
- * Clearing old results, if existing.
- */
-clear-widget:hyper-sql-results-grid-wrapper
-
-
-
-
-
-/*
- * Checking if it's possible to create charts out of the result.
- */
-if:x:/@p5.mysql.connect/*/p5.mysql.select/0/*?count
-  =:int:2
-  and:x:/@p5.mysql.connect/*/p5.mysql.select/*?count
-    <:int:30
-  and
-    p5.types.can-convert:x:/@p5.mysql.connect/*/p5.mysql.select/0/1?value
-      type:double
+  /*
+   * Storing SQL in session, such that we can populate the CodeMirror with
+   * it, if user leaves page, and comes back later.
+   */
+  p5.web.session.set:hyper-sql.current-sql
+    src:x:/../*/sql?value
 
   /*
-   * Graphs and charts can somehow be constructed from our above result.
+   * Clearing old results, if existing.
    */
-  add:x:/+/**/.data
-    src:x:/@p5.mysql.connect/*/p5.mysql.select/*
-  add:x:/../*/create-widgets
-    src
-      div
-        class:right strip
-        parent:hyper-sql-results-grid-wrapper
-        widgets
-          button
-            innerValue:@"<span class=""icon-pie-chart""></span>"
-            onclick
+  clear-widget:hyper-sql-results-grid-wrapper
 
-              /*
-               * Creating a pie chart in a modal widget, displaying result set.
-               */
-              .data
-              for-each:x:/@.data/*
-                set:x:/+2/*/*?name
-                  src:x:/@_dp/#/0?value
-                eval-x:x:/+/*/*
-                add:x:/../*/create-widgets/*/*/*/micro.widgets.chart.pie/*/data
-                  src
-                    foo:x:/@_dp/#/1?value
-              create-widgets
-                micro.widgets.modal
-                  widgets
-                    h3
-                      innerValue:Pie chart of your data
-                    micro.widgets.chart.pie
-                      data
+  /*
+   * Verifying SQL actually yielded a result.
+   */
+  if:x:/@p5.mysql.select/*
+    not
+    micro.windows.info:SQL executed successfully but yielded no result
+      class:micro-windows-info success
+    return
 
-          button
-            innerValue:@"<span class=""icon-stats-bars""></span>"
-            onclick
+  /*
+   * Checking if it's possible to create charts out of the result.
+   */
+  if:x:/@p5.mysql.select/0/*?count
+    =:int:2
+    and:x:/@p5.mysql.select/*?count
+      <:int:40
+    and
+      p5.types.can-convert:x:/@p5.mysql.select/0/1?value
+        type:double
 
-              /*
-               * Creating a column chart in a modal widget, displaying result set.
-               */
-              .data
-              for-each:x:/@.data/*
-                set:x:/+2/*/*?name
-                  src:x:/@_dp/#/0?value
-                eval-x:x:/+/*/*
-                add:x:/../*/create-widgets/*/*/*/micro.widgets.chart.column/*/data
-                  src
-                    foo:x:/@_dp/#/1?value
-              create-widgets
-                micro.widgets.modal
-                  widgets
-                    h3
-                      innerValue:Bar chart of your data
-                    micro.widgets.chart.column
-                      data
+    /*
+     * Graphs and charts can somehow be constructed from our above result.
+     */
+    add:x:/+/**/.data
+      src:x:/@p5.mysql.select/*
+    add:x:/../*/create-widgets
+      src
+        div
+          class:right strip
+          parent:hyper-sql-results-grid-wrapper
+          widgets
+            button
+              innerValue:@"<span class=""icon-pie-chart""></span>"
+              onclick
 
+                /*
+                 * Creating a pie chart in a modal widget, displaying result set.
+                 */
+                .data
+                for-each:x:/@.data/*
+                  set:x:/+2/*/*?name
+                    src:x:/@_dp/#/0?value
+                  eval-x:x:/+/*/*
+                  add:x:/../*/create-widgets/*/*/*/micro.widgets.chart.pie/*/data
+                    src
+                      foo:x:/@_dp/#/1?value
+                create-widgets
+                  micro.widgets.modal
+                    widgets
+                      h3
+                        innerValue:Pie chart of your data
+                      micro.widgets.chart.pie
+                        data
 
+            button
+              innerValue:@"<span class=""icon-stats-bars""></span>"
+              onclick
 
+                /*
+                 * Creating a column chart in a modal widget, displaying result set.
+                 */
+                .data
+                for-each:x:/@.data/*
+                  set:x:/+2/*/*?name
+                    src:x:/@_dp/#/0?value
+                  eval-x:x:/+/*/*
+                  add:x:/../*/create-widgets/*/*/*/micro.widgets.chart.column/*/data
+                    src
+                      foo:x:/@_dp/#/1?value
+                create-widgets
+                  micro.widgets.modal
+                    widgets
+                      h3
+                        innerValue:Bar chart of your data
+                      micro.widgets.chart.column
+                        data
 
+  /*
+   * Creating column headers for our datagrid.
+   */
+  for-each:x:/@p5.mysql.connect/*/p5.mysql.select/0/*
+    set:x:/+/*/*?name
+      src:x:/@_dp/#?name
+    add:x:/../*/create-widgets/*/micro.widgets.grid/*/columns
+      src
+        foo
 
-/*
- * Verifying SQL actually yielded a result.
- */
-if:x:/@p5.mysql.connect/*/p5.mysql.select/*
-  not
-  micro.windows.info:SQL successfully executed
-    class:micro-windows-info success
-  return
+  /*
+   * Creating rows for our datagrid.
+   */
+  add:x:/+/*/*/items
+    src:x:/..p5.mysql.connect/*/p5.mysql.select/[0,1]/*
+  add:x:/../*/create-widgets/*/micro.widgets.grid/*/rows
+    micro.evaluate.file:@HYPER-SQL/helpers/create-grid-rows.hl
+      items
 
-
-
-
-
-/*
- * Creating column headers for our datagrid.
- */
-for-each:x:/@p5.mysql.connect/*/p5.mysql.select/0/*
-  set:x:/+/*/*?name
-    src:x:/@_dp/#?name
-  add:x:/../*/create-widgets/*/micro.widgets.grid/*/columns
-    src
-      foo
-
-
-
-
-
-/*
- * Creating rows for our datagrid.
- */
-add:x:/+/*
-  src:x:/@p5.mysql.connect/*/p5.mysql.select/*
-add:x:/../*/create-widgets/*/micro.widgets.grid/*/rows
-  micro.evaluate.file:@HYPER-SQL/helpers/create-grid-rows.hl
-
-
-
-
-
-/*
- * Checking if we had less than fifty items in our result,
- * at which point we delete the "feed grid with more items" button.
- */
-if:x:/@p5.mysql.connect/*/p5.mysql.select/*?count
-  <:int:50
-  set:x:/../*/create-widgets/*/div/=hyper-sql-feed-more-wrapper
+  /*
+   * Checking if we had less than fifty items in our result,
+   * at which point we delete the "feed grid with more items" button.
+   */
+  if:x:/@p5.mysql.connect/*/p5.mysql.select/*?count
+    <:int:50
+    set:x:/../*/create-widgets/*/div/=hyper-sql-feed-more-wrapper
 
 
 
@@ -201,10 +189,11 @@ create-widgets
           /*
            * Databinding grid.
            */
-          add:x:/+/*
+          add:x:/+/*/*/items
             src:x:/@p5.mysql.connect/*/p5.mysql.select/*
           add:x:/+
             micro.evaluate.file:@HYPER-SQL/helpers/create-grid-rows.hl
+              items
           micro.widgets.grid.databind:hyper-sql-results-grid
             keep-items:true
 
