@@ -1,0 +1,24 @@
+
+/*
+ * Creates our "download as CSV file" button.
+ */
+button
+  innerValue:@"<span class=""icon-download2""></span>"
+  title:Downloads your current SQL as a CSV file
+  onclick
+
+    /*
+     * Retrieving SQL from code editor, executes it, and downloads it
+     * to the client.
+     */
+    hyper-sql.database.get
+    hyper-sql.sql-editor.get-sql
+    p5.mysql.connect:[{0}]
+      :x:/@hyper-sql.database.get?value
+      p5.mysql.select-into:x:/@hyper-sql.sql-editor.get-sql?value
+        outfile:~/temp/results.csv
+
+      /*
+       * Downloads the CSV file to the client.
+       */
+      micro.download.file:~/temp/results.csv
