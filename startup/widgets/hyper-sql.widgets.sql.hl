@@ -184,6 +184,15 @@ p5.hyper_sql_long_event = function (wdg, evt) {
                         eval-x:x:/+/*
                         micro.evaluate.file:@HYPER-SQL/helpers/item-selected.hl
                           item:x:/../*/items/0?name
+                      oninit
+
+                        /*
+                         * Making sure we initially expand our root node.
+                         */
+                        micro.widgets.tree.toggle-items:hyper-sql-explorer
+                          force-expand:true
+                          items
+                            .
 
             container
               class:col-70
