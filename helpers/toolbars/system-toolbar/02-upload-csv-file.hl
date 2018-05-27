@@ -1,9 +1,10 @@
 
 /*
- * Creates our "uploadCSV file" button.
+ * Creates our "upload CSV file" button.
  */
 micro.widgets.upload-button:hyper-sql-upload-csv-file
   disabled
+  multiple
   events
 
 
@@ -13,9 +14,9 @@ micro.widgets.upload-button:hyper-sql-upload-csv-file
     hyper-sql.database-explorer.selected-item-changed
 
       /*
-       * Checking if selected object is a database, either directly or
-       * indirectly - And if so, making sure we update the selected
-       * value of our dropdown.
+       * Checking if selected object is a table, either directly or
+       * indirectly - And if so, making sure we enable the button,
+       * and store the database/table.
        */
       if:x:/../*/_arg?value
         =:table
@@ -31,6 +32,7 @@ micro.widgets.upload-button:hyper-sql-upload-csv-file
 
         /*
          * No database is currently selected, neither directly nor indirectly.
+         * Disabling the button.
          */
         set-widget-property:hyper-sql-upload-csv-file
           disabled
@@ -38,17 +40,40 @@ micro.widgets.upload-button:hyper-sql-upload-csv-file
   .onupload
 
     /*
-     * Retrieving active database and table, and figuring out how to reproduce
-     * the table.
+     * Retrieving active database and table, and importing uploaded CSV file into table.
      */
     get-widget-property:hyper-sql-upload-csv-file
       .database
       .table
     p5.mysql.connect:[{0}]
       :x:/@get-widget-property/*/*/.database?value
-      p5.mysql.load-from
-        infile:x:/../*/files/0?value
-        table:x:/@get-widget-property/*/*/.table?value
-      micro.windows.info:{0} records successfully imported
-        :x:/@p5.mysql.load-from?value
-        class:micro-windows-info success
+
+      /*
+       * Making sure we wrap our insert in a transaction, to avoid importing
+       * "half" a file due to exceptions occurring.
+       */
+      p5.mysql.transaction.begin
+
+        /*
+         * Iterating through each file uploaded.
+         */
+        .no:long:0
+        for-each:x:/../*/files/*?value
+          p5.mysql.load-from
+            infile:x:/@_dp?value
+            table:x:/@get-widget-property/*/*/.table?value
+          set:x:/@.no?value
+            +:x:/@.no?value
+              _:x:/@p5.mysql.load-from?value
+
+        /*
+         * Committing transaction.
+         */
+        p5.mysql.transaction.commit
+
+        /*
+         * Providing feedback to user.
+         */
+        micro.windows.info:{0} records successfully imported
+          :x:/@.no?value
+          class:micro-windows-info success
