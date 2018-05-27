@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Creates our "show create database" button.
  */
 button
@@ -70,7 +70,7 @@ button
         micro.widgets.modal:hyper-sql-show-create-table-modal
           widgets
             h3
-              innerValue:Create table
+              innerValue:Create database
             micro.widgets.codemirror
               mode:text/x-mysql
               value:x:/@.sql?value
