@@ -1,9 +1,12 @@
+
 /*
  * Creates a collection of items to databind the results datagrid towards.
  *
  * Expects a bunch of __[row]__ items.
  */
 for-each:x:/../*/items/*
+  add:x:/+/*/*/*/.row/*/onclick/*/.item
+    src:x:/@_dp/#/*
   add:x:/../*/return
     src
       item
@@ -11,10 +14,19 @@ for-each:x:/../*/items/*
           onclick
 
             /*
-             * Toggling "view details" CSS class on row.
+             * Contains entire row.
              */
-            micro.css.toggle:x:/../*/_event?value
-              class:hyper-sql-view-details
+            .item
+
+            /*
+             * Invoking event responsible for handling editing item.
+             */
+            add:x:/+2/*/item
+              src:x:/@.item/*
+            eval-x:x:/+/*/widget
+            hyper-sql.datagrid.edit-item
+              widget:x:/../*/_event?value
+              item
 
   for-each:x:/@_dp/#/*
     p5.html.html-encode:x:/@_dp/#?value

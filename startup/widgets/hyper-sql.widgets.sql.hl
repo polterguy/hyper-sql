@@ -241,6 +241,22 @@ p5.hyper_sql_long_event = function (wdg, evt) {
                           return:x:/-/*?value
 
 
+                        /*
+                         * Invoked when datagrid should allow for in-place editing
+                         * of some clicked item.
+                         */
+                        hyper-sql.datagrid.edit-item
+
+                          /*
+                           * Forwards all arguments, and evaluates file responsible
+                           * for displaying in-place editing widgets.
+                           */
+                          .signal
+                          add:x:/+
+                            src:x:/@.signal/--/<-(!/_event)
+                          micro.evaluate.file:@HYPER-SQL/helpers/edit-item.hl
+
+
                     /*
                      * Wrapper for our datagrid that displays the result of execution of SQL.
                      */
