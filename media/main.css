@@ -21,14 +21,26 @@
     overflow: unset;
     text-overflow: unset;
 }
+#hyper-sql-explorer .hyper-sql-database>a.item-label>span.icon {
+    background-image: none;
+}
 #hyper-sql-explorer .hyper-sql-database>a.item-label>span.icon:before {
     content:'\e9ae';
+}
+#hyper-sql-explorer .hyper-sql-table>a.item-label>span.icon {
+    background-image: none;
 }
 #hyper-sql-explorer .hyper-sql-table>a.item-label>span.icon:before {
     content:'\ea70';
 }
+#hyper-sql-explorer .hyper-sql-field>a.item-label>span.icon {
+    background-image: none;
+}
 #hyper-sql-explorer .hyper-sql-field>a.item-label>span.icon:before {
     content:'\e924';
+}
+#hyper-sql-explorer .hyper-sql-primary-key>a.item-label>span.icon {
+    background-image: none;
 }
 #hyper-sql-explorer .hyper-sql-primary-key>a.item-label>span.icon:before {
     content:'\e98d';
